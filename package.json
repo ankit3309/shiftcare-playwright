@@ -6,13 +6,25 @@
     "test": "playwright test",
     "ui": "playwright test --ui",
     "headed": "playwright test --headed",
-    "ci:test": "playwright test --project=chromium --workers=4 --trace on"
+    "ci:test": "playwright test --project=chromium --workers=4 --trace on",
+    "test:staging": "cross-env ENV=staging playwright test --project=chromium --workers=2",
+    "test:staging:headed": "cross-env ENV=staging playwright test --project=chromium --headed --workers=1",
+
+    "_comment_staging": "SCRIPT TO RUN TESTS IN STAGING ENVIRONMENT. PLEASE TYPE 'npm run test:staging:ui' TO RUN THE TESTS.",
+    "test:staging:ui": "cross-env ENV=staging playwright test --ui --project=chromium",
+
+    "test:production": "cross-env ENV=production playwright test --project=chromium --workers=2",
+    "test:production:headed": "cross-env ENV=production playwright test --project=chromium --headed --workers=1",
+
+    "_comment_production": "SCRIPT TO RUN TESTS IN PRODUCTION ENVIRONMENT. PLEASE TYPE 'npm run test:production:ui' TO RUN THE TESTS.",
+    "test:production:ui": "cross-env ENV=production playwright test --ui --project=chromium"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.56.1",
+    "cross-env": "^7.0.3",
     "dotenv": "^17.2.3"
   },
   "dependencies": {

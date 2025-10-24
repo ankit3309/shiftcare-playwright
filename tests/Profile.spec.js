@@ -9,11 +9,27 @@ test.describe('Profile Update', () => {
     const page = await context.newPage();
     const profile = new ProfilePage(page);
 
+    // Navigate to profile page and handle new tab
     await profile.gotoProfilePage();
-    await profile.editProfileName("Ankit Barwal Staging Update");
-    await profile.verifyUpdatedProfileName("Ankit Barwal Staging Update");
-    await profile.revertProfileName(); 
-    // Close the context
+    
+    // Wait for new tab to open and switch to it
+    const newPagePromise = context.waitForEvent('page');
+    await profile.clickProfileButton();
+    const newPage = await newPagePromise;
+    
+    // Create ProfilePage instance for the new tab
+    const profileNewTab = new ProfilePage(newPage);
+    
+    // Wait for the new page to load
+    await newPage.waitForLoadState('domcontentloaded');
+    
+    // Perform profile update operations on the new tab
+    await profileNewTab.editProfileName("Automation User Update");
+    await profileNewTab.verifyUpdatedProfileName("Automation User Update");
+    await profileNewTab.revertProfileName("Automation User");
+    
+    // Close the new tab and context
+    await newPage.close();
     await context.close();
   });
 

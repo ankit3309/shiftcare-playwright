@@ -32,7 +32,6 @@ class LoginPage {
 
     // Handle reCAPTCHA
     await this.handleRecaptcha();
-
     // Wait for the form to be ready and click submit
     await this.submitBtn.click();
 

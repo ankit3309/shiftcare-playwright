@@ -20,7 +20,7 @@ npm init -y
 npm install --save-dev @playwright/test
 
 # Install additional dependencies
-npm install dotenv
+npm install dotenv cross-env
 ```
 
 ### 2. Install Playwright Browsers
@@ -32,25 +32,25 @@ npx playwright install
 
 ### 3. Environment Configuration
 
-Create a `.env` file in the root directory with your ShiftCare credentials:
-
-
-Add the following environment variables to `.env`:
+Create a `.env` file in the root directory with your ShiftCare credentials for both staging and production environments:
 
 ```env
-# ShiftCare Application URLs
-SHIFTCARE_BASE_URL=https://app-stg.shiftcare.com
+# Staging Environment
+SHIFTCARE_STAGING_BASE_URL=https://app-stg.shiftcare.com
+SHIFTCARE_STAGING_EMAIL=barwalankit12345+staging@gmail.com
+SHIFTCARE_STAGING_PASSWORD=InvalidPassword
+SHIFTCARE_STAGING_CARER_EMAIL=barwalankit12345+johncarer@gmail.com
+SHIFTCARE_STAGING_CARER_PASSWORD=InvalidPassword
 
-# Admin Credentials
-SHIFTCARE_EMAIL=your-admin-email@example.com
-SHIFTCARE_PASSWORD=your-admin-password
-
-# Carer Credentials
-SHIFTCARE_CARER_EMAIL=your-carer-email@example.com
-SHIFTCARE_CARER_PASSWORD=your-carer-password
+# Production Environment
+SHIFTCARE_PRODUCTION_BASE_URL=https://app.shiftcare.com
+SHIFTCARE_PRODUCTION_EMAIL=barwalankit12345+automationprod@gmail.com
+SHIFTCARE_PRODUCTION_PASSWORD=InvalidPassword
+SHIFTCARE_PRODUCTION_CARER_EMAIL=barwalankit12345+johnprod@gmail.com
+SHIFTCARE_PRODUCTION_CARER_PASSWORD=InvalidPassword
 ```
 
-**⚠️ Important:** Replace the placeholder values with your actual ShiftCare credentials.
+**⚠️ Important:** The credentials are configured for staging and production environments. Update them as needed for your specific setup.
 
 ### 4. Project Structure
 
@@ -115,10 +115,12 @@ Key features:
 ### 3. Profile Management Tests (`Profile.spec.js`)
 
 #### Test 01: Update Profile Name
-- Admin navigates to profile page
-- Admin edits profile name
+- Admin navigates to main dashboard
+- Admin clicks user menu and profile link (opens new tab)
+- Admin switches to new tab and edits profile name
 - Admin verifies profile name update
 - Admin reverts profile name to original
+- Properly handles new tab scenario and cleanup
 
 #### Test 02: Invalid Login Credentials
 - Attempts login with invalid password
@@ -127,25 +129,43 @@ Key features:
 
 ## 🏃‍♂️ Running Tests
 
-### Command Line Interface
+### Environment-Specific Testing
+
+The test suite supports both **staging** and **production** environments:
+
+#### Staging Environment
+```bash
+# Run all tests on staging
+npm run test:staging
+
+
+# Run staging tests with visible browser
+npm run test:staging:headed
+
+# Run staging tests in UI mode
+npm run test:staging:ui
+```
+
+#### Production Environment
+```bash
+# Run all tests on production
+npm run test:production
+
+# Run production tests with visible browser
+npm run test:production:headed
+
+# Run production tests in UI mode
+npm run test:production:ui
+```
+
+### General Command Line Interface
 
 ```bash
-# Run all tests
+# Run all tests (default staging)
 npx playwright test
-
-# Run specific test file
-npx playwright test tests/Shift.spec.js
-npx playwright test tests/Profile.spec.js
-
-# Run specific test scenario
-npx playwright test tests/Shift.spec.js -g "01 - should allow admin to create"
-npx playwright test tests/Profile.spec.js -g "01 - should allow admin to update profile"
 
 # Run tests in headed mode (see browser)
 npx playwright test --headed
-
-# Run tests in debug mode
-npx playwright test --debug
 
 # Run tests with specific project
 npx playwright test --project=chromium
@@ -154,11 +174,17 @@ npx playwright test --project=chromium
 ### UI Mode (Interactive)
 
 ```bash
-# Open Playwright UI
+# Open Playwright UI (default staging)
 npx playwright test --ui
 
+# Run staging tests in UI mode
+npm run test:staging:ui
+
+# Run production tests in UI mode
+npm run test:production:ui
+
 # Run tests in UI mode with specific project
-npx playwright test --ui --project=tests-with-auth
+npx playwright test --ui --project=chromium
 ```
 
 ### Test Reports
